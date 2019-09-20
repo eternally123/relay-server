@@ -2,9 +2,9 @@
 #define TOOLS_HPP_
 #include "relayServer.hpp"
 
-int openListenfd(int port, int listen_queue_num);
+int openListenFd(int port, int listen_queue_num);
 int acceptClient(int listenfd);
-int openConnectfd(char* ip, int port);
+int openConnectFd(char* ip, int port);
 
 ssize_t readn(int fd, void* buff, size_t n);
 

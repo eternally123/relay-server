@@ -2,53 +2,48 @@
 #include <agent.hpp>
 #include "relayServer.hpp"
 
-AgentManager::AgentManager()
-{
+AgentManager::AgentManager() {
     nextId = 1;
 }
 
-AgentManager::~AgentManager()
-{
+AgentManager::~AgentManager() {
 }
 
-int AgentManager::generateId()
-{
+int AgentManager::generateId() {
     return nextId++;
 }
 
-int AgentManager::login(Agent* agent)
-{
+int AgentManager::login(Agent *agent) {
     int id = generateId();
     agentMap[id] = agent;
     return id;
 }
 
-int AgentManager::logout(int id)
-{
+int AgentManager::logout(int id) {
     agentMap.erase(id);
     return 1;
 }
 
-Agent* AgentManager::searchById(int id)
-{
+Agent *AgentManager::searchById(int id) {
     return agentMap[id];
 }
 
-int AgentManager::recycle()
-{
+int AgentManager::recycle() {
     AgentMap::iterator iter;
     Agent *srcAgent, *destAgent;
     iter = agentMap.begin();
-    AgentTask* agentTask;
+    AgentTask *agentTask;
     while (iter != agentMap.end()) {
         srcAgent = iter->second;
-        int destId = srcAgent->m_head->destId;
-        destAgent = agentMap[destId];
+        if (srcAgent->m_readTaskList.size() > 0) {//有task
+            agentTask = srcAgent->m_readTaskList.front();
+            srcAgent->m_readTaskList.pop_front();
 
+            int destId = agentTask->getDestId();
+            destAgent = agentMap[destId];
 
-        agentTask = srcAgent->m_readTaskList.front();
-        srcAgent->m_readTaskList.pop_front();
-        destAgent->m_writeTaskList.push_back(agentTask);
+            destAgent->m_writeTaskList.push_back(agentTask);
+        }
     }
 
     return 0;

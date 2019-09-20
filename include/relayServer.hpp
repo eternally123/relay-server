@@ -37,7 +37,7 @@
 #endif
 
 #ifndef EPOLL_TIMEOUT
-#define EPOLL_TIMEOUT 5000
+#define EPOLL_TIMEOUT 2000
 #endif
 
 #ifndef EPOLL_MAXHANDLE_SIZE

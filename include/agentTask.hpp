@@ -6,16 +6,21 @@
 
 class AgentTask {
 public:
-    AgentTask(int destId, int bufSize);
+    AgentTask(int srcId, int destId, int bufSize);
+
     ~AgentTask();
 
-    int generateTask(char* start, char* end);
-    int sendTaskToBuffer(Buffer* buffer);
+    int getDestId();
+
+    int generateTask(char *start, char *end);
+
+    int sendTaskToBuffer(Buffer *buffer);
 
 private:
+    int m_srcId;
     int m_destId;
     int m_bufSize;
-    char* m_buf;
+    char *m_buf;
 };
 
 #endif

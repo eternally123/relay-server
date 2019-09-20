@@ -3,20 +3,18 @@
 #include <buffer.hpp>
 #include "relayServer.hpp"
 
-TransAgent::TransAgent()
-{
+TransAgent::TransAgent(int socketFd) {
     m_head = new Head();
     m_buffer = new Buffer();
+    m_socketFd = socketFd;
 }
 
-TransAgent::~TransAgent()
-{
+TransAgent::~TransAgent() {
     if (m_buffer != NULL)
         delete[] m_buffer;
 }
 
-int TransAgent::receive()
-{
+int TransAgent::receive() {
     int n;
     if (m_buffer->m_onceReadFinish == true) {
         n = readHeader();
@@ -30,7 +28,7 @@ int TransAgent::receive()
 
     if (m_buffer->m_readSize == m_head->bodyLength) {
         //读取完客户端一次请求，将任务加入到taskList中
-        AgentTask* agentTask = new AgentTask(m_head->destId, m_buffer->m_readSize);
+        AgentTask *agentTask = new AgentTask(m_head->srcId, m_head->destId, m_buffer->m_readSize);
         agentTask->generateTask(m_buffer->m_readStart, m_buffer->m_readEnd);
         m_readTaskList.push_back(agentTask);
 
@@ -39,8 +37,7 @@ int TransAgent::receive()
     return n;
 }
 
-int TransAgent::send()
-{
+int TransAgent::send() {
     int n;
     if (m_buffer->m_onceWriteFinish == false) {
         //此次task尚未做完
@@ -49,7 +46,7 @@ int TransAgent::send()
     if (m_buffer->m_writeEnd == m_buffer->m_writeStart) {
         //task finish
         if (m_writeTaskList.size() != 0) {
-            AgentTask* agentTask = m_writeTaskList.front();
+            AgentTask *agentTask = m_writeTaskList.front();
             m_writeTaskList.pop_front();
             agentTask->sendTaskToBuffer(m_buffer);
         }
@@ -57,8 +54,7 @@ int TransAgent::send()
     return n;
 }
 
-int TransAgent::readHeader()
-{
+int TransAgent::readHeader() {
     int n = read(m_socketFd, m_head, sizeof(Head));
     if (n != sizeof(Head)) {
         return -1;
@@ -67,8 +63,7 @@ int TransAgent::readHeader()
     return 0;
 }
 
-int TransAgent::readBody()
-{
+int TransAgent::readBody() {
     int n = m_buffer->read_noblock(m_socketFd);
     return n;
 }

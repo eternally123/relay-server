@@ -1,7 +1,7 @@
 #include "tools.hpp"
 #include "relayServer.hpp"
 
-int openListenfd(int port, int listen_queue_num)
+int openListenFd(int port, int listen_queue_num)
 {
     int listenfd;
     struct sockaddr_in server_address;

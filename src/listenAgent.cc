@@ -5,7 +5,8 @@
 #include "netinet/in.h"
 
 
-ListenAgent::ListenAgent() {
+ListenAgent::ListenAgent(int socketFd) {
+    m_socketFd = socketFd;
 }
 
 ListenAgent::~ListenAgent() {
@@ -14,9 +15,9 @@ ListenAgent::~ListenAgent() {
 Agent *ListenAgent::accept() {
     sockaddr_in clientAddress;
     memset(&clientAddress, 0, sizeof(clientAddress));
-    int newFd = Accept(m_socketFd, (sockaddr *) &clientAddress, reinterpret_cast<__socklen_t *>(sizeof(clientAddress)));
+    int newFd = Accept(m_socketFd, (sockaddr *) &clientAddress, (__socklen_t*)(sizeof(clientAddress)));
 
-    return ((Agent *) (new TransAgent()));
+    return ((Agent *) (new TransAgent(newFd)));
 }
 
 int ListenAgent::getSocketFd() {
@@ -24,9 +25,9 @@ int ListenAgent::getSocketFd() {
 }
 
 int ListenAgent::send() {
-
+    return 0;
 }
 
 int ListenAgent::receive() {
-
+    return 0;
 }

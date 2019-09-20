@@ -15,17 +15,17 @@ public:
 
     virtual ~Agent() {};
 
-    virtual int receive() {};
+    virtual int receive() {return 0;};
 
-    virtual int send() {};
+    virtual int send() {return 0;};
 
-    virtual Agent *accept() {};
+    virtual Agent *accept() {return 0;};
 
-    virtual int getSocketFd() {};
+    virtual int getSocketFd() {return 0;};
 
 protected:
     Head *m_head;
-    Buffer *m_buffer; //?初始值是什么
+    Buffer *m_buffer;
     int m_socketFd;
     typedef std::list<AgentTask *> taskList;
     taskList m_readTaskList, m_writeTaskList;

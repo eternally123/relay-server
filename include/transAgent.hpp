@@ -7,7 +7,7 @@ class TransAgent:public Agent {
     friend class AgentManager;
 
 public:
-    TransAgent();
+    TransAgent(int socketFd);
     virtual ~TransAgent();
 
     virtual int receive();

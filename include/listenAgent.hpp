@@ -5,7 +5,7 @@
 
 class ListenAgent : public Agent {
 public:
-    ListenAgent();
+    ListenAgent(int socketFd);
 
     virtual ~ListenAgent();
 

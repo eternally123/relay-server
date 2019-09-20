@@ -5,9 +5,9 @@
 
 class Epoll {
 public:
-    Epoll();
+    Epoll(int port);
     ~Epoll();
-    void create();
+    void create(); //init
     void run();
     void destory();
 
