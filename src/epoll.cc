@@ -1,6 +1,7 @@
+#include "listenAgent.hpp"
+#include "relayServer.hpp"
 #include <epoll.hpp>
 #include <tools.hpp>
-#include "relayServer.hpp"
 
 Epoll::Epoll()
 {
@@ -22,6 +23,10 @@ void Epoll::create()
         exit(1);
     }
 
+    m_listenFd = listenFd;
+    ListenAgent* listenAgent = new ListenAgent();
+    addEvent(listenFd, EPOLLIN, (void*)listenAgent);
+
     return;
 }
 
@@ -35,10 +40,15 @@ void Epoll::run()
     for (int i = 0; i < numReady; i++) {
         event = m_epollEvents[i]; //获取event
         agent = (Agent*)event.data.ptr;
-        if (event.events || EPOLLIN)
-            agent->receive();
-        if (event.events || EPOLLOUT)
-            agent->send();
+        if (agent->getSocketFd() == m_listenFd) {
+            //listenFd
+            Agent* newAgent = agent->accept();
+        } else {
+            if (event.events || EPOLLIN)
+                agent->receive();
+            if (event.events || EPOLLOUT)
+                agent->send();
+        }
     }
 
     m_agentManager->recycle();

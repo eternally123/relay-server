@@ -1,7 +1,7 @@
 #ifndef EPOLL_HPP_
 #define EPOLL_HPP_
-#include "relayServer.hpp"
 #include "agentManager.hpp"
+#include "relayServer.hpp"
 
 class Epoll {
 public:
@@ -21,6 +21,7 @@ private:
     int m_epollFd;
     int m_port;
     int m_epollSize;
+    int m_listenFd;
     epoll_event* m_epollEvents;
     AgentManager* m_agentManager;
 };

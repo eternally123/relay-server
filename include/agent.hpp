@@ -3,27 +3,33 @@
 
 #include "relayServer.hpp"
 
-#include "message.hpp"
-#include "buffer.hpp"
 #include "agentTask.hpp"
+#include "buffer.hpp"
+#include "message.hpp"
 
 class Agent {
     friend class AgentManager;
 
 public:
-    Agent(){};
-    virtual ~Agent(){};
+    Agent() {};
 
-    virtual int receive() = 0;
-    virtual int send() = 0;
+    virtual ~Agent() {};
+
+    virtual int receive() {};
+
+    virtual int send() {};
+
+    virtual Agent *accept() {};
+
+    virtual int getSocketFd() {};
 
 protected:
-    Head* m_head;
-    Buffer* m_buffer; //?初始值是什么
+    Head *m_head;
+    Buffer *m_buffer; //?初始值是什么
     int m_socketFd;
-    typedef std::list<AgentTask*> taskList;
+    typedef std::list<AgentTask *> taskList;
     taskList m_readTaskList, m_writeTaskList;
-//    taskList* t;
+    //    taskList* t;
 };
 
 #endif
